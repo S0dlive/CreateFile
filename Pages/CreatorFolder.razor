@@ -1,0 +1,113 @@
+@page "/"
+<h3>CreatorFolder @proj.Count</h3>
+
+@if (create)
+{
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Nom Du projet</span>
+    </div>
+    <input type="text" aria-label="First name" class="form-control" @bind="title">
+  </div>
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Description du projet</span>
+    </div>
+    <input type="text" aria-label="First name" class="form-control" @bind="description">
+  </div>
+
+  <button type="button" class="btn btn-primary" @onclick="ButtonCreator">Crée le projet</button>
+
+}
+
+
+@foreach (var project in proj)
+{
+  <nav class="panel">
+    <p class="panel-heading">
+      @project.Title
+      <button class="button" @onclick= "Callback">
+        <span class="icon is-small">
+          +
+        </span>
+        </button>
+    </p>
+    @foreach (var file in project.file)
+    {
+      <a class="panel-block is-active">
+        <span class="panel-icon">
+          <i class="fas fa-book" aria-hidden="true"></i>
+        </span>
+        @file.Name@file.extension
+      </a>
+
+    }
+
+
+    
+    <div class="panel-block">
+      <button class="button is-link is-outlined is-fullwidth">
+        Reset all filters
+      </button>
+    </div>
+  </nav>
+}
+
+@if (createfile)
+{
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Nom Du Fichier</span>
+    </div>
+    <input type="text" aria-label="First name" class="form-control" @bind="namefile">
+  </div>
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Extension du fichier</span>
+    </div>
+    <input type="text" aria-label="First name" class="form-control" @bind="ext">
+  </div>
+
+  <button type="button" class="btn btn-primary" @onclick="CreateFile">Crée le Fichier</button>
+}
+
+@code {
+  private bool create = true;
+  private string title;
+  private string description;
+  private List<Project> proj = new();
+  private bool createfile = false;
+  private string namefile;
+  private string ext;
+  
+  
+  
+  private void ButtonCreator()
+  {
+    create = false;
+    proj.Add(new Project
+    {
+      Title = title,
+      Description = description,
+      ID = Guid.NewGuid().ToString()
+      
+    });
+  }
+
+  private void Callback()
+  {
+    createfile = true;
+  }
+
+  private void CreateFile()
+  {
+    createfile = false;
+    proj[0].file.Add(new File()
+    {
+      Name = namefile,
+      extension = ext
+    });
+    
+  }
+
+}
